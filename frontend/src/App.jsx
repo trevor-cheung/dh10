@@ -11,7 +11,7 @@ function App() {
   const [data, setData] = useState([{}]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/get").then(
+    fetch("http://127.0.0.1:5000/api/get").then(
       res => {
         return res.json();
       }
@@ -24,7 +24,7 @@ function App() {
 
   const handleFormSubmit = (inputValue) => {
 
-    axios.post("http://localhost:5000/api/submit", { inputValue })
+    axios.post("http://127.0.0.1:5000/api/submit", { inputValue })
       .then(response => {
           console.log('Backend response:', response.data);
           window.location.reload(false)

@@ -23,4 +23,4 @@ def submit_data():
     return {"response": ["response:", input_data]}
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
