@@ -1,6 +1,7 @@
 
 
 import React from 'react';
+import Logo from "../assets/Group_4.svg"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import {
   CDBSidebar,
@@ -16,7 +17,7 @@ const Sidebar = () => {
   return  <div style={{ display: 'flex', height: '37vh', overflow: 'scroll initial' }}>
   <CDBSidebar textColor="#000" backgroundColor="#fff">
     <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
-    <i class="bi bi-recycle"></i>
+    <img src={Logo} className='mx-2' style={{width: 30, height: 30}} alt="React Logo" />
       <a href="/" className="text-decoration-none" style={{ color: 'inherit' }} >
          Trash Teller 
       </a>
@@ -25,14 +26,14 @@ const Sidebar = () => {
 
     <CDBSidebarContent className="sidebar-content d-flex justify-content-start" >
       <CDBSidebarMenu >
-        <NavLink  >
+        <NavLink  to="/" >
           <CDBSidebarMenuItem icon="search">Search</CDBSidebarMenuItem>
         </NavLink>
-        <NavLink  >
+        <NavLink  to="/depots" >
           <CDBSidebarMenuItem icon="map">Depots Near Me</CDBSidebarMenuItem>
         </NavLink>
-        <NavLink  >
-          <CDBSidebarMenuItem icon="table">Guidlines</CDBSidebarMenuItem>
+        <NavLink  to = "/guidelines" >
+          <CDBSidebarMenuItem icon="table">Guidelines</CDBSidebarMenuItem>
         </NavLink>
        
 
