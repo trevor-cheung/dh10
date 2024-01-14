@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import InputForm from './InputForm';
 import axios from 'axios'
+import DataButton from './DataButton';
 
 function App() {
 
@@ -26,34 +27,30 @@ function App() {
 
     axios.post("http://127.0.0.1:5000/api/submit", { inputValue })
       .then(response => {
-          console.log('Backend response:', response.data);
-          window.location.reload(false)
+        console.log('Backend response:', response.data);
+        window.location.reload(false)
       })
       .catch(error => {
-          console.error('Error submitting input:', error);
+        console.error('Error submitting input:', error);
       });
   };
-
 
   return (
     <>
       <div>
 
-      <InputForm onSubmit={handleFormSubmit} />
+        <InputForm onSubmit={handleFormSubmit} />
 
-      {(typeof data.response === 'undefined') ? (
-           <p>Loading...</p>
+        {(typeof data.response === 'undefined') ? (
+          <p>Loading...</p>
         ) : (
           data.response.map((item, i) => (
             <p key={i}>{item}</p>
           ))
         )}
-
-
-        
         
       </div>
-      
+
     </>
   )
 }
