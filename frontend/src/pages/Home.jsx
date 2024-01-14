@@ -107,7 +107,7 @@ const Home = (args) => {
     const config = {
       headers: {
         'Content-type': 'multipart/form-data',
-        'Authorization': `Bearer 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` // REMOVE KEY
+        'Authorization': `Bearer open ai key` // REMOVE KEY
       }
     };
   
