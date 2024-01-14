@@ -8,7 +8,7 @@ const center = { lat: 48.8584, lng: 2.2945 }
 const Depot = () => {
 
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: '',
+        googleMapsApiKey: 'AIzaSyCoTnCGvNvkN-Cm9eks94YbgvpFtGxDhew',
         libraries: ['places'],
     })
 
