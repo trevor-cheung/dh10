@@ -1,79 +1,46 @@
-import React from "react";
 
 
-import { NavItem, NavLink, Nav } from "reactstrap";
-import classNames from "classnames";
-//import { Link } from "react-router-dom";
+import React from 'react';
+import "bootstrap-icons/font/bootstrap-icons.css"
+import {
+  CDBSidebar,
+  CDBSidebarContent,
+  CDBSidebarFooter,
+  CDBSidebarHeader,
+  CDBSidebarMenu,
+  CDBSidebarMenuItem,
+} from 'cdbreact';
+import { NavLink } from 'react-router-dom';
 
-import SubMenu from "./Submenu";
+const Sidebar = () => {
+  return  <div style={{ display: 'flex', height: '37vh', overflow: 'scroll initial' }}>
+  <CDBSidebar textColor="#000" backgroundColor="#fff">
+    <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
+    <i class="bi bi-recycle"></i>
+      <a href="/" className="text-decoration-none" style={{ color: 'inherit' }} >
+         Trash Teller 
+      </a>
+     
+    </CDBSidebarHeader>
 
-const SideBar = ({ isOpen, toggle }) => (
-  <div className={classNames("sidebar", { "is-open": isOpen })}>
-    <div className="sidebar-header">
-      <span color="info" onClick={toggle} style={{ color: "#fff" }}>
-        &times;
-      </span>
-      <h3>Bootstrap Sidebar</h3>
-    </div>
-    <div className="side-menu">
-      <Nav vertical className="list-unstyled pb-3">
-        <p>Dummy Heading</p>
-        <SubMenu title="Home"  items={submenus[0]} />
-        <NavItem>
-          <NavLink>
-            
-            About
-          </NavLink>
-        </NavItem>
-        <SubMenu title="Pages"  items={submenus[1]} />
-        <NavItem>
-          <NavLink >
-          
-            Portfolio
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink >
-           
-            FAQ
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink >
-           
-            Contact
-          </NavLink>
-        </NavItem>
-      </Nav>
-    </div>
-  </div>
-);
+    <CDBSidebarContent className="sidebar-content d-flex justify-content-start" >
+      <CDBSidebarMenu >
+        <NavLink  >
+          <CDBSidebarMenuItem icon="search">Search</CDBSidebarMenuItem>
+        </NavLink>
+        <NavLink  >
+          <CDBSidebarMenuItem icon="map">Depots Near Me</CDBSidebarMenuItem>
+        </NavLink>
+        <NavLink  >
+          <CDBSidebarMenuItem icon="table">Guidlines</CDBSidebarMenuItem>
+        </NavLink>
+       
 
-const submenus = [
-  [
-    {
-      title: "Home 1",
-      target: "Home-1",
-    },
-    {
-      title: "Home 2",
-      target: "Home-2",
-    },
-    {
-      title: "Home 3",
-      target: "Home-3",
-    },
-  ],
-  [
-    {
-      title: "Page 1",
-      target: "Page-1",
-    },
-    {
-      title: "Page 2",
-      target: "Page-2",
-    },
-  ],
-];
+      </CDBSidebarMenu>
+    </CDBSidebarContent>
 
-export default SideBar;
+  </CDBSidebar>
+</div>
+};
+
+export default Sidebar;
