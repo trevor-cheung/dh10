@@ -25,6 +25,7 @@ function App() {
       });
   }, []);
 
+
   const [summary, setSummary] = useState([{}]);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ function App() {
         console.log(summary);
       });
   }, []);
+
 
   const [image_data, setImageData] = useState([{}]);
 
@@ -103,7 +105,7 @@ const callWhisper = (blob) => {
   const config = {
     headers: {
       'Content-type': 'multipart/form-data',
-      'Authorization': `Bearer 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` // REMOVE KEY
+      'Authorization': `Bearer api-key` // REMOVE KEY
     }
   };
 
@@ -136,8 +138,6 @@ const callWhisper = (blob) => {
       <div>
 
       <InputForm onSubmit={handleFormSubmit} />
-
-      
 
       {(typeof data.response === 'undefined') ? (
            <p>Loading...</p>

@@ -26,9 +26,6 @@ def chatgpt(prompt):
 
     return(response_dict['choices'][0]['message']['content'])
 
-# def linkToQs(link, lang): # takes link, returns q/a arrays
-    # return Q_and_A_arrays(generate_questions(link_to_transcript(link), lang))
-
 names = []
 import urllib.request, json 
 with urllib.request.urlopen("https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/76ea33f1-31f0-42ea-a295-385fb4d94ea9/resource/274fde37-233c-485d-bc68-8177f0793412/download/Waste%20Wizard%20Data%20from%20TOwaste%20App.json") as url:
