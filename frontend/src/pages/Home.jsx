@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Container } from 'reactstrap'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardTitle, CardBody, CardText, CardSubtitle } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css"
 import Sidebar from '../components/SideBar';
@@ -107,7 +107,7 @@ const Home = (args) => {
     const config = {
       headers: {
         'Content-type': 'multipart/form-data',
-        'Authorization': `Bearer open ai key` // REMOVE KEY
+        'Authorization': `Bearer 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` // REMOVE KEY
       }
     };
   
@@ -145,9 +145,9 @@ const Home = (args) => {
               <h1 className='p-3'>I Need to Recycle...</h1>
               <Search onSubmit={handleFormSubmit}/>
               <div>
-      <Button outline className="bi bi-mic m-3 px-2" onClick={ToggleMic}>
-      </Button>
-      <Button outline className="bi bi-question-circle m-3 px-2"  onClick={toggle}>
+              <Button outline className="bi bi-mic m-3 px-2" onClick={ToggleMic}>
+              </Button>
+              <Button outline className="bi bi-question-circle m-3 px-2"  onClick={toggle}>
 
               </Button>
               <Modal isOpen={modal} toggle={toggle} {...args}>
@@ -168,29 +168,28 @@ const Home = (args) => {
                 </ModalFooter>
               </Modal>
 
-
-              {(typeof data.response === 'undefined') ? (
-                <p>Loading...</p>
-              ) : (
-                data.response.map((item, i) => (
-                  <p key={i}>{item}</p>
-                ))
-              )}
-
-              {(typeof summary.response === 'undefined') ? (
-                <p>Loading...</p>
-              ) : (
-                summary.response.map((item, i) => (
-                  <p key={i}>{item}</p>
-                ))
-              )}
-              {(typeof image_data.response === 'undefined') ? (
-                <p>Loading...</p>
-              ) : (
-                image_data.response.map((item, i) => (
-                  <p key={i}><img src={item} alt="loading image..."></img></p>
-                ))
-              )}
+              {((typeof data.response !== 'undefined') && (typeof summary.response !== 'undefined') && (typeof image_data.response !== 'undefined')) &&
+                <Card className="m-3 p-3" >
+                  <CardBody>
+                    {
+                      data.response.map((item, i) => (
+                        <CardTitle tag="h2" className="p-3" key={i}>Item: {item}</CardTitle>
+                      ))
+                    }
+                    {
+                      image_data.response.map((item, i) => (
+                        <p key={i}><img style={{width: '50%', height: '50%', justifyContent: 'center', textAlign: 'center'}} src={item} alt="loading image..."></img></p>
+                      ))
+                    }
+                    {
+                      summary.response.map((item, i) => (
+                        <CardSubtitle tag="h4" className="p-3 mb-2" key={i}>Instructions: {item}</CardSubtitle>
+                      ))
+                    }
+                    
+                  </CardBody>
+                </Card>
+              }
 
 
             </div>
