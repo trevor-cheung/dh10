@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, redirect, url_for
 from flask_cors import CORS
 
+
 app = Flask(__name__)
 
 CORS(app, origins=["http://localhost:5173"])
@@ -37,7 +38,7 @@ def calculate_cosine_similarity(query, corpus):
 
 
 # Example
-query = "mlik carton"
+query = "cereal box"
 
 similarity_scores = calculate_cosine_similarity(query, names)
 
@@ -51,7 +52,25 @@ for word, score in zip(names, similarity_scores):
 
 print("Closest word = " + closest_word)
 
+import cohere
 
+API_key= " enter api key here"
+co = cohere.Client(API_key)
+
+def get_relevant_info (data, name):
+    for item in data:
+        if name == item["item"]:
+            instructions = ""
+            for instr in item["instructions"]:
+                instructions += (instr + " ")
+            response = co.generate(
+                prompt="Given the context: Name: " + name + " Category: " + item["category"] + "Instructions: " + instructions + ", write me a concise one sentence summary of how I should dispose of this item.",
+                max_tokens=100
+            )
+            print(response.generations[0].text)
+
+
+get_relevant_info(data, closest_word)
 
     
 def find_options(names, current):
