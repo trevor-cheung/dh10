@@ -1,71 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import InputForm from './InputForm';
-import axios from 'axios'
-import DataButton from './DataButton';
-import Record from './Record';
-import dotenv from 'dotenv';
 
-function App() {
+import { useState } from 'react'
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home'
+import Depots from './pages/Depots'
+import Guidelines from './pages/Guidelines'
 
 
-  const [data, setData] = useState([{}]);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/get").then(
-      res => {
-        return res.json();
-      }
-    ).then(
-      data => {
-        setData(data);
-        console.log(data);
-      });
-  }, []);
-
-
-  const [summary, setSummary] = useState([{}]);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/get_summary").then(
-      res => {
-        return res.json();
-      }
-    ).then(
-      summary => {
-        setSummary(summary);
-        console.log(summary);
-      });
-  }, []);
-
-
-  const [image_data, setImageData] = useState([{}]);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/get_image").then(
-      res => {
-        return res.json();
-      }
-    ).then(
-      image_data => {
-        setImageData(image_data);
-        console.log(image_data);
-      });
-  }, []);
-
-  const handleFormSubmit = (inputValue) => {
-
-    axios.post("http://127.0.0.1:5000/api/submit", { inputValue })
-      .then(response => {
-          console.log('Backend response:', response.data);
-          window.location.reload(false)
-      })
-      .catch(error => {
-          console.error('Error submitting input:', error);
-      });
-  };
+function App(args) {
 
   
 
@@ -134,24 +76,20 @@ const callWhisper = (blob) => {
 
 
   return (
-    <>
-      <div>
 
-      <InputForm onSubmit={handleFormSubmit} />
 
-      {(typeof data.response === 'undefined') ? (
-           <p>Loading...</p>
-        ) : (
-          data.response.map((item, i) => (
-            <p key={i}>{item}</p>
-          ))
-        )}
-
-      <Record recordVoice={ ToggleMic } />
+    <BrowserRouter>
+      <Routes>
+        <Route path = '/' element = {<Home/>}/>
+        <Route path = '/depots' element = {<Depots/>}/>
+        <Route path = '/guidelines' element = {<Guidelines/>}/>
         
-      </div>
-      
-    </>
+      </Routes>
+</BrowserRouter>
+    
+
+
+
   )
 }
 
