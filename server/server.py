@@ -20,6 +20,8 @@ with urllib.request.urlopen("https://ckan0.cf.opendata.inter.prod-toronto.ca/dat
     for item in data:
         names.append(item["item"])
 
+names_string = ", ".join(names)
+
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -54,12 +56,54 @@ print("Closest word = " + closest_word)
 
 import cohere
 
-API_key= " enter api key here"
+API_key= "nojT8GUnVoVpRlhGrrwdeMoQcPAzny3zRS10cfw4"
 co = cohere.Client(API_key)
 
+def get_closest_word(query):
+    n = len(names_string) / 3
+    response = co.generate(
+        prompt="Given this list of items: " + names_string[:int(n)] + ", write me the exact name of the item in the list that most closely matches the following string: " + query + ", in the format of Item: [name of item in list].",
+        truncate="END"
+    )
+    print(response.generations[0].text)
+    return (response.generations[0].text)
+word_1 = get_closest_word(query).split(":")[1]
+def get_closest_word_2(query):
+    n = len(names_string) / 3
+    response = co.generate(
+        prompt="Given this list of items: " + names_string[int(n):2*int(n)] + ", write me the exact name of the item in the list that most closely matches the following string: " + query + ", in the format of Item: [name of item in list].",
+        truncate="END"
+    )
+    print(response.generations[0].text)
+    return (response.generations[0].text)
+word_2 = get_closest_word_2(query).split(":")[1]
+def get_closest_word_3(query):
+    n = len(names_string) / 3
+    response = co.generate(
+        prompt="Given this list of items: " + names_string[2*int(n):] + ", write me the exact name of the item in the list that most closely matches the following string: " + query + ", in the format of Item: [name of item in list].",
+        truncate="END"
+    )
+    print(response.generations[0].text)
+    return (response.generations[0].text)
+word_3 = get_closest_word_3(query).split(":")[1]
+word_list = word_1 + ", " + word_2 + ", " + word_3
+print(word_list)
+def get_closest_word_4(query):
+    n = len(names_string) / 3
+    response = co.generate(
+        prompt="Given this list of items: " + word_list + ", write me the exact name of the item in the list that most closely matches the following string: " + query + ", in the exact format of Item: [name of item in list].",
+        truncate="END"
+    )
+    print(response.generations[0].text)
+    return (response.generations[0].text)
+
+database_item = get_closest_word_4(query).split(":")[1]
+
 def get_relevant_info (data, name):
+    print(name)
     for item in data:
-        if name == item["item"]:
+        if name.strip() == item["item"].strip():
+            print("found")
             instructions = ""
             for instr in item["instructions"]:
                 instructions += (instr + " ")
@@ -68,10 +112,25 @@ def get_relevant_info (data, name):
                 max_tokens=100
             )
             print(response.generations[0].text)
-
-
-get_relevant_info(data, closest_word)
-
+get_relevant_info(data, database_item)
+            
+def concise_list (data):
+    # print(names_string)
+    n = len(names_string) / 3
+    response = co.generate(
+        prompt="Given the list of items: " + names_string[:int(n)]+ ", rank the items by how commonly they are used/handled, and give me the top third of that list of items, in the format of: item, item, item, etc..",
+        truncate="END"
+    )
+    print(response.generations[0].text)
+# concise_list(data)
+    
+def my_model(query):
+    response = co.generate(
+        model='32a981cd-456a-48d4-b3e6-f1fa2d450769-ft',
+        prompt=query
+    )
+    print(response.generations[0].text)
+# my_model(query)
     
 def find_options(names, current):
     values = []
