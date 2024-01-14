@@ -4,11 +4,11 @@ import { useJsApiLoader, GoogleMap, Marker,Autocomplete, StandaloneSearchBox } f
 import Loading from '../components/Loading'
 import { useRef, useState } from 'react';
 
-const center = { lat: 48.8584, lng: 2.2945 }
+const center = { lat: 43.2617, lng: -79.9228 }
 const Depot = () => {
 
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyCoTnCGvNvkN-Cm9eks94YbgvpFtGxDhew',
+        googleMapsApiKey: '',
         libraries: ['places'],
     })
 
@@ -51,14 +51,14 @@ const Depot = () => {
                                         <Button>
                                             Search
                                         </Button>
-                                        <Button color= 'success' onClick={()=>console.log(placeRef)}>Re-center Map</Button>
+                                        <Button color= 'success' onClick={()=> map.panTo(center)}>Re-center Map</Button>
                                     </InputGroup>
                                     
                                 </CardTitle>
 
                                 <GoogleMap
                                     center={center}
-                                    zoom={10}
+                                    zoom={15}
                                     mapContainerStyle={{ width: '100%', height: '100%' }}
                                     options={{
                                         streetViewControl: false,
@@ -68,7 +68,7 @@ const Depot = () => {
                                     }}
                                     onLoad={(map) => setMap(map)}
                                 >
-                                    <Marker position={center}/>
+                                    <Marker position={{lat: 43.2617, lng: -79.9228}}/>
                                 </GoogleMap>
                             </CardBody>
                         </Card>
