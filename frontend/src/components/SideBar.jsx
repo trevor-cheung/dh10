@@ -14,12 +14,12 @@ import {
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
-  return  <div style={{ display: 'flex', overflow: 'scroll initial' }}>
+  return  <div style={{ display: 'flex', height: '37vh', overflow: 'scroll initial' }}>
   <CDBSidebar textColor="#000" backgroundColor="#fff">
     <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
     <img src={Logo} className='mx-2' style={{width: 30, height: 30}} alt="React Logo" />
       <a href="/" className="text-decoration-none" style={{ color: 'inherit' }} >
-         Trash Teller 
+         Bin Buddy
       </a>
      
     </CDBSidebarHeader>
