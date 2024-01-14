@@ -12,6 +12,8 @@ from flask import Response
 #variables
 user_input = ""
 bin_image = ""
+bin_type = ""
+cohere_summary = ""
 
 names = []
 import urllib.request, json 
@@ -24,8 +26,8 @@ with urllib.request.urlopen("https://ckan0.cf.opendata.inter.prod-toronto.ca/dat
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def calculate_cosine_similarity(query, corpus):
-    vectorizer = CountVectorizer().fit_transform([query] + corpus)
+def calculate_cosine_similarity(query, names):
+    vectorizer = CountVectorizer().fit_transform([query] + names)
     vectors = vectorizer.toarray()
 
     # Calculate cosine similarity
@@ -34,43 +36,39 @@ def calculate_cosine_similarity(query, corpus):
     # Extract the similarity scores for the query against each document
     query_similarity_scores = similarity_scores[0, 1:]
 
-    return query_similarity_scores
+    largest_score = 0
+    closest_word = ""
+    for word, score in zip(names, query_similarity_scores):
+        if score > largest_score:
+            largest_score = score
+            closest_word = word
+
+    print("Closest word = " + closest_word)
+    return closest_word
 
 
-# Example
-query = "cereal box"
 
-similarity_scores = calculate_cosine_similarity(query, names)
-
-# Print the similarity scores
-largest_score = 0
-closest_word = ""
-for word, score in zip(names, similarity_scores):
-    if score > largest_score:
-        largest_score = score
-        closest_word = word
-
-print("Closest word = " + closest_word)
 
 import cohere
 
-API_key= " enter api key here"
+API_key= " put api key here"
 co = cohere.Client(API_key)
 
 def get_relevant_info (data, name):
     for item in data:
         if name == item["item"]:
+            global bin_type
+            bin_type = item["category"]
             instructions = ""
             for instr in item["instructions"]:
                 instructions += (instr + " ")
             response = co.generate(
-                prompt="Given the context: Name: " + name + " Category: " + item["category"] + "Instructions: " + instructions + ", write me a concise one sentence summary of how I should dispose of this item.",
+                prompt="Given the context: Name: " + name + " Category: " + item["category"] + "Instructions: " + instructions + ", write me a concise one sentence summary of how I should dispose of this item. Do not ask me any questions.",
                 max_tokens=100
             )
-            print(response.generations[0].text)
+            return response.generations[0].text
 
 
-get_relevant_info(data, closest_word)
 
     
 def find_options(names, current):
@@ -91,6 +89,11 @@ def get_data():
     global user_input
     return {"response": [user_input]}
 
+@app.route("/api/get_summary", methods=['GET'])
+def get_summary():
+    global cohere_summary
+    return {"response": [cohere_summary]}
+
 
 @app.route("/api/get_image", methods=['GET'])
 def get_image_data():
@@ -104,18 +107,26 @@ def submit_data():
     print("received info")
     global user_input
     user_input = input_data
-    change_image(input_data)
+
+    closest_word = calculate_cosine_similarity(input_data, names)
+    global cohere_summary
+    cohere_summary = get_relevant_info(data, closest_word)
+
+    change_image(bin_type)
 
     get_image_data()
+    get_summary()
     get_data()
     return {"response": ["response:", input_data]}
 
 def change_image(calculated_bin):
     global bin_image
-    if (calculated_bin == "blue"):
+    if (calculated_bin == "Blue Bin"):
         bin_image = "https://assets.shop.loblaws.ca/products/20162341/b2/en/front/20162341_front_a06_@2.png"
-    elif (calculated_bin == "green"):
+    elif (calculated_bin == "Green Bin"):
         bin_image = "https://png.pngtree.com/png-vector/20200312/ourmid/pngtree-garbage-waste-sorting-organic-recycle-bin-green-color-flat-vector-illustration-png-image_2155234.jpg"
+    elif (calculated_bin == "Garbage Bin"):
+        bin_image = "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-silver-trash-bin-clipart-png-image_2858577.jpg"
 
 if __name__ == '__main__':
     app.run()
