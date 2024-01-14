@@ -56,7 +56,7 @@ print("Closest word = " + closest_word)
 
 import cohere
 
-API_key= "nojT8GUnVoVpRlhGrrwdeMoQcPAzny3zRS10cfw4"
+API_key= " enter api key here"
 co = cohere.Client(API_key)
 
 def get_closest_word(query):
