@@ -40,7 +40,7 @@ def calculate_cosine_similarity(query, corpus):
 
 
 # Example
-query = "cereal box"
+query = "frosted flakes box"
 
 similarity_scores = calculate_cosine_similarity(query, names)
 
@@ -56,7 +56,7 @@ print("Closest word = " + closest_word)
 
 import cohere
 
-API_key= " enter api key here"
+API_key= "nojT8GUnVoVpRlhGrrwdeMoQcPAzny3zRS10cfw4"
 co = cohere.Client(API_key)
 
 def get_closest_word(query):
@@ -101,17 +101,17 @@ database_item = get_closest_word_4(query).split(":")[1]
 
 def get_relevant_info (data, name):
     print(name)
-    for item in data:
-        if name.strip() == item["item"].strip():
-            print("found")
-            instructions = ""
-            for instr in item["instructions"]:
-                instructions += (instr + " ")
-            response = co.generate(
-                prompt="Given the context: Name: " + name + " Category: " + item["category"] + "Instructions: " + instructions + ", write me a concise one sentence summary of how I should dispose of this item.",
-                max_tokens=100
-            )
-            print(response.generations[0].text)
+    # for item in data:
+    #     if name.strip() == item["item"].strip():
+    #         print("found")
+    #         instructions = ""
+    #         for instr in item["instructions"]:
+    #             instructions += (instr + " ")
+    #         response = co.generate(
+    #             prompt="Given the context: Name: " + name + " Category: " + item["category"] + "Instructions: " + instructions + ", write me a concise one sentence summary of how I should dispose of this item.",
+    #             max_tokens=100
+    #         )
+    #         print(response.generations[0].text)
 get_relevant_info(data, database_item)
             
 def concise_list (data):

@@ -38,18 +38,24 @@ with urllib.request.urlopen("https://ckan0.cf.opendata.inter.prod-toronto.ca/dat
 
 names_string = ", ".join(names)
 
-query = "lawnmower"
+query = "dell computer"
 
 def get_closest_word(query):
-    prompt = f"Given this list of items: {names_string}, write me the exact name of the item in the list that most closely matches the following string: {query}, in the format of Item: [name of item in list]."
+    prompt = f"Given this list of items: {names_string}, if and only if there is a good match, write me the exact name of the item in the list that most closely matches the following string: {query}, in the format of Item: [name of item in list]. If there is not a good match, say Item: no match."
     output = chatgpt(prompt)
     return output
-
-print(get_closest_word(query))
-database_item = get_closest_word(query).split(":")[1].strip()
+closest_word = get_closest_word(query)
+print(closest_word)
+database_item = closest_word.split(":")[1].strip()
+# if closest_word == 'no match':
+#     database_item = 'no match'
+# else:
+#     database_item = closest_word.split(":")[1].strip()
 
 def get_relevant_info (data, name):
     print(name)
+    if name == "no match":
+        return 'This item is not currently in the database, please check back later or call your local waste management service.'
     for item in data:
         if name.strip() == item["item"].strip():
             print("found")
@@ -57,7 +63,7 @@ def get_relevant_info (data, name):
             for instr in item["instructions"]:
                 instructions += (instr + " ")
             
-            prompt="Given the context: Name: " + name + " Category: " + item["category"] + "Instructions: " + instructions + ", write me a concise one sentence summary of how I should dispose of this item.",
+            prompt="Given the context: Name: " + name + " Category: " + item["category"] + "Instructions: " + instructions + ", write me a concise and clear summary of how I should dispose of this item with as little words as possible.",
             output = chatgpt(prompt)
             return output
 print(get_relevant_info(data, database_item))
