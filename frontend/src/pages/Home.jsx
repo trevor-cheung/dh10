@@ -18,7 +18,7 @@ const Home = (args) => {
   const [data, setData] = useState([{}]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/get").then(
+    fetch("http://127.0.0.1:5000/api/get").then(
       res => {
         return res.json();
       }
@@ -33,7 +33,7 @@ const Home = (args) => {
   const [summary, setSummary] = useState([{}]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/get_summary").then(
+    fetch("http://127.0.0.1:5000/api/get_summary").then(
       res => {
         return res.json();
       }
@@ -48,7 +48,7 @@ const Home = (args) => {
   const [image_data, setImageData] = useState([{}]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/get_image").then(
+    fetch("http://127.0.0.1:5000/api/get_image").then(
       res => {
         return res.json();
       }
@@ -61,7 +61,7 @@ const Home = (args) => {
 
   const handleFormSubmit = (inputValue) => {
 
-    axios.post("http://localhost:5000/api/submit", { inputValue })
+    axios.post("http://127.0.0.1:5000/api/submit", { inputValue })
       .then(response => {
         console.log('Backend response:', response.data);
         window.location.reload(false)
@@ -71,21 +71,83 @@ const Home = (args) => {
       });
   };
 
+    // TODO: Implement this function with media recorder API and convert to mp3 file
+    let can_record = false;
+    let is_recording = false;
+    let recorder = null;
+    
+    let chunks = [];
+    
+    const setupAudio = () => {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+          recorder = new MediaRecorder(stream);
+          recorder.ondataavailable = e => {
+            chunks.push(e.data);
+          };
+          recorder.onstop = e => {
+            const blob = new Blob(chunks, { type: 'audio/mp3' });
+            chunks = [];
+            const audioURL = URL.createObjectURL(blob);
+            callWhisper(blob);
+            const audio = new Audio(audioURL);
+            //audio.play();
+          }
+          can_record = true;
+        });
+      }
+    };
+  setupAudio();
+  
+  const callWhisper = (blob) => {
+    const formData = new FormData();
+    formData.append('file', blob);
+    formData.append('model', 'whisper-1') // formData for Whisper-1
+  
+    const config = {
+      headers: {
+        'Content-type': 'multipart/form-data',
+        'Authorization': `Bearer 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` // REMOVE KEY
+      }
+    };
+  
+    const response = axios.post('https://api.openai.com/v1/audio/transcriptions', formData, config).then(response => {
+      console.log(response.data.text);
+      handleFormSubmit(response.data.text); // this line submits the text to the backend
+      return response.data.text;
+    }).catch(error => { console.log(error) });
+    return response;
+  }
+  
+    const ToggleMic = () => {
+      if (!can_record) return;
+      
+      is_recording = !is_recording;
+  
+      if (is_recording) {
+        recorder.start();
+      } else {
+        recorder.stop();
+        can_record = true;
+      }
+    };
+
   return (
-
-
-    <div>
-      <div className=" flex-row p-2 ">
-        <Sidebar />
-      </div>
-      <div className="d-flex">
-        <div className="p-2 flex-grow-1"></div>
-        <div className="p-2 flex-grow-1 text-center">
-          <div className="flex-column text-center">
-            <h1 className='p-3'>I Need to Recycle...</h1>
-            <Search onSubmit={handleFormSubmit} />
-            <div>
-              <Button outline className="bi bi-question-circle m-3 px-2" onClick={toggle}>
+    
+      <div>
+        <div className=" flex-row p-2 ">
+          <Sidebar />
+        </div>
+        <div className="d-flex">
+          <div className="p-2 flex-grow-1"></div>
+          <div className="p-2 flex-grow-1 text-center">
+            <div className="flex-column text-center">
+              <h1 className='p-3'>I Need to Recycle...</h1>
+              <Search onSubmit={handleFormSubmit}/>
+              <div>
+      <Button outline className="bi bi-mic m-3 px-2" onClick={ToggleMic}>
+      </Button>
+      <Button outline className="bi bi-question-circle m-3 px-2"  onClick={toggle}>
 
               </Button>
               <Modal isOpen={modal} toggle={toggle} {...args}>

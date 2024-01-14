@@ -107,9 +107,11 @@ def submit_data():
     input_data = request.json.get('inputValue')
     print("received info")
     global user_input
-    user_input = input_data
+    
 
     database_item = get_closest_word(input_data).split(":")[1].strip()
+
+    user_input = database_item
     print(database_item)
     global summary
     summary = get_relevant_info(data, database_item)
