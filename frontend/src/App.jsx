@@ -22,6 +22,7 @@ function App() {
       });
   }, []);
 
+
   const [summary, setSummary] = useState([{}]);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ function App() {
         console.log(summary);
       });
   }, []);
+
 
   const [image_data, setImageData] = useState([{}]);
 
@@ -63,14 +65,11 @@ function App() {
   };
 
 
-
   return (
     <>
       <div>
 
       <InputForm onSubmit={handleFormSubmit} />
-
-      
 
       {(typeof data.response === 'undefined') ? (
            <p>Loading...</p>
@@ -79,7 +78,25 @@ function App() {
             <p key={i}>{item}</p>
           ))
         )}
-        
+
+
+      {(typeof summary.response === 'undefined') ? (
+           <p>Loading...</p>
+        ) : (
+          summary.response.map((item, i) => (
+            <p key={i}>{item}</p>
+          ))
+        )}
+
+        {(typeof image_data.response === 'undefined') ? (
+           <p>Loading...</p>
+        ) : (
+          image_data.response.map((item, i) => (
+            <p key={i}><img src={item} alt="bin image"></img></p>
+          ))
+        )}
+      
+
       </div>
       
     </>
